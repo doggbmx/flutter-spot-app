@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "731985589337",
+    "project_id": "spot-app-c4a9f",
+    "storage_bucket": "spot-app-c4a9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731985589337:android:b87ad05e891e3368c76d48",
+        "android_client_info": {
+          "package_name": "com.example.secret_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731985589337-3tjmetfi51i7q6ps2g1kpvjjpk7kb66b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA97nvZrhXxK3kDe6n68MEXsZmbJEG8h-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731985589337-3tjmetfi51i7q6ps2g1kpvjjpk7kb66b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
