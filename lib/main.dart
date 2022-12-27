@@ -22,6 +22,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late Position _currentPosition;
   MapController? controller;
+  bool isLoading = true;
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -57,7 +58,10 @@ class _MyAppState extends State<MyApp> {
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
-      setState(() => _currentPosition = position);
+      setState(() {
+        _currentPosition = position;
+        isLoading = false;
+      });
     }).catchError((e) {
       debugPrint(e);
     });
@@ -100,60 +104,72 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       Marker(
-        point: LatLng(-25.294685685868085, -57.57737932703449),
-        builder: (context) => const Icon(
-          Icons.stairs,
-          color: Colors.green,
-          size: 30,
-        ),
-      ),
+          point: LatLng(-25.294685685868085, -57.57737932703449),
+          builder: (context) => GestureDetector(
+                onTap: () => log('auch'),
+                child: const Icon(
+                  Icons.stairs,
+                  color: Colors.green,
+                  size: 30,
+                ),
+              )),
     ];
 
-    return Scaffold(
-        drawer: const SideBar(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => log('asd'),
-          child: const Icon(Icons.location_searching_rounded),
-        ),
-        appBar: AppBar(
-          elevation: 25,
-          shadowColor: Colors.purpleAccent,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                alignment: const Alignment(0, 0),
-                child: const SizedBox(
-                  // width: double.infinity,
-                  child: Text('Baratapp para vagos', textAlign: TextAlign.end),
-                ),
-              ),
-            ],
-          ),
-        ),
-        body: Center(
-          child: Column(children: [
-            Flexible(
-              child: FlutterMap(
-                options: MapOptions(
-                    center: LatLng(
-                        _currentPosition.latitude, _currentPosition.longitude),
-                    // LatLng(-25.294685685868085, -57.57737932703449),
-                    zoom: 14),
+    return isLoading
+        ? const CircularProgressIndicator(
+            backgroundColor: Colors.white,
+            strokeWidth: 4,
+          )
+        : Scaffold(
+            drawer: const SideBar(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => log(_currentPosition.toString()),
+              child: const Icon(Icons.location_searching_rounded),
+            ),
+            appBar: AppBar(
+              elevation: 25,
+              shadowColor: Colors.purpleAccent,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TileLayer(
-                    urlTemplate:
-                        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    subdomains: const ['a', 'b', 'c'],
-                    // backgroundColor: Colors.transparent,
+                  Container(
+                    alignment: const Alignment(0, 0),
+                    child: const SizedBox(
+                      // width: double.infinity,
+                      child:
+                          Text('Baratapp para vagos', textAlign: TextAlign.end),
+                    ),
                   ),
-                  MarkerLayer(
-                    markers: marker,
-                  )
                 ],
               ),
-            )
-          ]),
-        ));
+            ),
+            body: Center(
+              child: Column(children: [
+                Flexible(
+                  child: FlutterMap(
+                    options: MapOptions(
+                        center: LatLng(
+                          _currentPosition.latitude,
+                          _currentPosition.longitude,
+                        ),
+                        // LatLng(-25.294685685868085, -57.57737932703449),
+                        zoom: 14,
+                        minZoom: 4,
+                        maxZoom: 28),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: const ['a', 'b', 'c'],
+                        // backgroundColor: Colors.transparent,
+                      ),
+                      MarkerLayer(
+                        markers: marker,
+                      )
+                    ],
+                  ),
+                )
+              ]),
+            ));
   }
 }
