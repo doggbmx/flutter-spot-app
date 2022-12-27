@@ -21,7 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late Position _currentPosition;
-  MapController? controller;
+  late MapController controller;
   bool isLoading = true;
 
   Future<bool> _handleLocationPermission() async {
@@ -60,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         .then((Position position) {
       setState(() {
         _currentPosition = position;
+        controller = controller;
         isLoading = false;
       });
     }).catchError((e) {
@@ -123,7 +124,13 @@ class _MyAppState extends State<MyApp> {
         : Scaffold(
             drawer: const SideBar(),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => log(_currentPosition.toString()),
+              onPressed: () {
+                log(_currentPosition.toString());
+                controller.move(
+                    LatLng(
+                        _currentPosition.latitude, _currentPosition.longitude),
+                    14);
+              },
               child: const Icon(Icons.location_searching_rounded),
             ),
             appBar: AppBar(
@@ -147,6 +154,7 @@ class _MyAppState extends State<MyApp> {
               child: Column(children: [
                 Flexible(
                   child: FlutterMap(
+                    mapController: controller,
                     options: MapOptions(
                         center: LatLng(
                           _currentPosition.latitude,
